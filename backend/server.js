@@ -1,6 +1,12 @@
 import express from 'express';
 import products from './data/products.js';
-const PORT = 8080;
+dotenv.config();
+import dotenv from 'dotenv';
+import connectDB from './config/db.js';
+
+connectDB();
+
+const PORT = process.env.PORT || 8080;
 
 const app = express();
 
@@ -9,7 +15,12 @@ app.get('/', (req, res) => {
 });
 
 app.get('/api/products', (req, res) => {
-  res.send(products);
+  res.json(products);
+});
+
+app.get('/api/products/:id', (req, res) => {
+  const product = products.find((p) => p._id === req.params.id);
+  res.json(product);
 });
 
 app.listen(PORT, () => console.log(`Server Running on Port ${PORT}`));
